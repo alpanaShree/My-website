@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neon Glow Calculator</title>
+
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(-45deg, #0f2027, #2c5364, #1c1c3c, #000428);
+        background-size: 400% 400%;
+        animation: gradientBG 12s ease infinite;
+    }
+
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .calculator {
+        position: relative;
+        width: 340px;
+        padding: 25px;
+        border-radius: 25px;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(25px);
+        box-shadow: 
+            0 0 30px #00f7ff,
+            0 0 60px #0072ff,
+            inset 0 0 20px rgba(0,255,255,0.3);
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        animation: glowPulse 3s infinite alternate;
+    }
+
+    @keyframes glowPulse {
+        from {
+            box-shadow: 
+                0 0 20px #00f7ff,
+                0 0 40px #0072ff,
+                inset 0 0 15px rgba(0,255,255,0.2);
+        }
+        to {
+            box-shadow: 
+                0 0 40px #00f7ff,
+                0 0 80px #0072ff,
+                inset 0 0 25px rgba(0,255,255,0.4);
+        }
+    }
+
+    #display {
+        grid-column: span 4;
+        height: 75px;
+        font-size: 30px;
+        text-align: right;
+        padding: 15px;
+        border-radius: 20px;
+        border: none;
+        outline: none;
+        background: rgba(0,0,0,0.7);
+        color: #00f7ff;
+        box-shadow: inset 0 0 15px #00f7ff;
+    }
+
+    button {
+        padding: 20px;
+        font-size: 18px;
+        border: none;
+        border-radius: 18px;
+        cursor: pointer;
+        color: white;
+        transition: 0.2s ease;
+        background: rgba(255,255,255,0.08);
+        box-shadow: 0 0 10px rgba(0,255,255,0.5);
+    }
+
+    button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0 20px #00f7ff;
+    }
+
+    button:active {
+        transform: scale(0.9);
+    }
+
+    .operator {
+        background: linear-gradient(145deg, #ff00cc, #3333ff);
+        box-shadow: 0 0 15px #ff00cc;
+    }
+
+    .equals {
+        background: linear-gradient(145deg, #00ffcc, #00ccff);
+        grid-column: span 2;
+        box-shadow: 0 0 20px #00ffcc;
+    }
+
+    .clear {
+        background: linear-gradient(145deg, #ff512f, #dd2476);
+        box-shadow: 0 0 15px #ff512f;
+    }
+
+</style>
+</head>
+
+<body>
+
+<div class="calculator">
+    <input type="text" id="display" placeholder="0" readonly>
+
+    <button class="clear" onclick="clearDisplay()">C</button>
+    <button class="clear" onclick="deleteLast()">DEL</button>
+    <button class="operator" onclick="appendToDisplay('/')">÷</button>
+    <button class="operator" onclick="appendToDisplay('*')">×</button>
+
+    <button onclick="appendToDisplay('7')">7</button>
+    <button onclick="appendToDisplay('8')">8</button>
+    <button onclick="appendToDisplay('9')">9</button>
+    <button class="operator" onclick="appendToDisplay('-')">−</button>
+
+    <button onclick="appendToDisplay('4')">4</button>
+    <button onclick="appendToDisplay('5')">5</button>
+    <button onclick="appendToDisplay('6')">6</button>
+    <button class="operator" onclick="appendToDisplay('+')">+</button>
+
+    <button onclick="appendToDisplay('1')">1</button>
+    <button onclick="appendToDisplay('2')">2</button>
+    <button onclick="appendToDisplay('3')">3</button>
+
+    <button onclick="appendToDisplay('0')" style="grid-column: span 2;">0</button>
+    <button onclick="appendToDisplay('.')">.</button>
+    <button class="equals" onclick="calculate()">=</button>
+</div>
+
+<script>
+    const display = document.getElementById('display');
+
+    function appendToDisplay(value) {
+        display.value += value;
+    }
+
+    function clearDisplay() {
+        display.value = '';
+    }
+
+    function deleteLast() {
+        display.value = display.value.slice(0, -1);
+    }
+
+    function calculate() {
+        try {
+            display.value = Function('"use strict";return (' + display.value + ')')();
+        } catch {
+            display.value = "Error";
+            setTimeout(clearDisplay, 1500);
+        }
+    }
+</script>
+
+</body>
+</html>
