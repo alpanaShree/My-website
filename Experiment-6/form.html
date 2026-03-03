@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Advanced Professional Registration</title>
+
+<style>
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  font-family:Segoe UI, sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  background: linear-gradient(135deg,#667eea,#764ba2,#6dd5ed);
+  padding:20px;
+}
+
+.form-box{
+  background:#ffffff;
+  width:600px;
+  max-height:95vh;
+  overflow-y:auto;
+  padding:30px;
+  border-radius:12px;
+  box-shadow:0 15px 40px rgba(0,0,0,0.2);
+}
+
+h2{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+label{
+  display:block;
+  margin-top:14px;
+  font-size:14px;
+  font-weight:600;
+}
+
+input, select, textarea{
+  width:100%;
+  padding:9px;
+  margin-top:5px;
+  border-radius:6px;
+  border:1px solid #ccc;
+  font-size:14px;
+}
+
+input:focus, select:focus, textarea:focus{
+  border-color:#667eea;
+  outline:none;
+}
+
+textarea{ resize:vertical; }
+
+.inline{
+  display:flex;
+  gap:15px;
+  margin-top:5px;
+}
+
+.inline input{ width:auto; }
+
+.password-container{ position:relative; }
+
+.eye-icon{
+  position:absolute;
+  right:10px;
+  top:35px;
+  cursor:pointer;
+  font-size:18px;
+}
+
+.strength-bar{
+  height:6px;
+  border-radius:4px;
+  margin-top:5px;
+}
+
+.match-message{
+  font-size:12px;
+  margin-top:4px;
+}
+
+.error{
+  color:red;
+  font-size:12px;
+}
+
+.success{
+  color:green;
+  font-weight:bold;
+  text-align:center;
+  margin-top:15px;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  margin-top:20px;
+  border:none;
+  border-radius:8px;
+  background:#667eea;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#5a67d8;
+}
+
+.preview-img{
+  margin-top:10px;
+  width:120px;
+  height:120px;
+  object-fit:cover;
+  border-radius:50%;
+  border:2px solid #667eea;
+}
+</style>
+</head>
+
+<body>
+
+<div class="form-box">
+<form id="myForm">
+
+<h2>Professional Registration</h2>
+
+<label>Profile Picture *</label>
+<input type="file" id="profilePic" accept="image/*">
+<img id="preview" class="preview-img" style="display:none;">
+<div class="error" id="picError"></div>
+
+<label>Full Name *</label>
+<input type="text" id="fullName">
+<div class="error" id="nameError"></div>
+
+<label>Email *</label>
+<input type="email" id="email">
+<div class="error" id="emailError"></div>
+
+<label>Contact Number *</label>
+<input type="tel" id="contact" placeholder="10-digit number">
+<div class="error" id="contactError"></div>
+
+<label>Date of Birth *</label>
+<input type="date" id="dob">
+<div class="error" id="dobError"></div>
+
+<label>Age (Auto Calculated)</label>
+<input type="number" id="age" readonly>
+
+<label>Gender *</label>
+<div class="inline">
+  <label><input type="radio" name="gender" value="Male"> Male</label>
+  <label><input type="radio" name="gender" value="Female"> Female</label>
+  <label><input type="radio" name="gender" value="Other"> Other</label>
+</div>
+<div class="error" id="genderError"></div>
+
+<label>Country *</label>
+<select id="country">
+<option value="">Select Country</option>
+<option>Nepal</option>
+<option>India</option>
+<option>Bangladesh</option>
+<option>Bhutan</option>
+<option>Sri Lanka</option>
+<option>Maldives</option>
+<option>USA</option>
+<option>UK</option>
+<option>Canada</option>
+<option>Australia</option>
+</select>
+<div class="error" id="countryError"></div>
+
+<label>Primary Skill *</label>
+<input type="text" id="skill">
+<div class="error" id="skillError"></div>
+
+<label>Years of Experience *</label>
+<input type="number" id="experience" min="0">
+<div class="error" id="experienceError"></div>
+
+<label>Upload Resume (PDF/DOC/DOCX) *</label>
+<input type="file" id="resume" accept=".pdf,.doc,.docx">
+<div class="error" id="resumeError"></div>
+
+<label>Password *</label>
+<div class="password-container">
+  <input type="password" id="password">
+  <span class="eye-icon" onclick="togglePassword('password', this)">👁️</span>
+</div>
+<div class="strength-bar" id="strengthBar"></div>
+<div class="error" id="passwordError"></div>
+
+<label>Confirm Password *</label>
+<div class="password-container">
+  <input type="password" id="confirmPassword">
+  <span class="eye-icon" onclick="togglePassword('confirmPassword', this)">👁️</span>
+</div>
+<div class="match-message" id="matchMessage"></div>
+<div class="error" id="confirmError"></div>
+
+<label>
+<input type="checkbox" id="agree"> I agree to Terms & Conditions *
+</label>
+<div class="error" id="agreeError"></div>
+
+<button type="submit">Register</button>
+<div class="success" id="successMessage"></div>
+
+</form>
+</div>
+
+<script>
+
+// Profile Picture Preview
+profilePic.addEventListener("change", function(){
+  const file = this.files[0];
+  if(file){
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = "block";
+  }
+});
+
+// Auto Age Calculation
+dob.addEventListener("change", function(){
+  const birthDate = new Date(this.value);
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if(m < 0 || (m === 0 && today.getDate() < birthDate.getDate())){
+    age--;
+  }
+  document.getElementById("age").value = age > 0 ? age : "";
+});
+
+// Toggle Password
+function togglePassword(id, icon){
+  const input = document.getElementById(id);
+  input.type = input.type === "password" ? "text" : "password";
+  icon.textContent = input.type === "password" ? "👁️" : "🙈";
+}
+
+// Password Strength
+password.addEventListener("input", function(){
+  let strength = 0;
+  const val = this.value;
+
+  if(val.length > 5) strength++;
+  if(/[A-Z]/.test(val)) strength++;
+  if(/[0-9]/.test(val)) strength++;
+  if(/[^A-Za-z0-9]/.test(val)) strength++;
+
+  if(val.length === 0){
+    strengthBar.style.width="0%";
+  } else if(strength <=1){
+    strengthBar.style.width="30%"; strengthBar.style.background="red";
+  } else if(strength <=3){
+    strengthBar.style.width="70%"; strengthBar.style.background="orange";
+  } else {
+    strengthBar.style.width="100%"; strengthBar.style.background="green";
+  }
+});
+
+// Match Password
+confirmPassword.addEventListener("input", function(){
+  if(this.value === password.value){
+    matchMessage.textContent="✔ Passwords Match";
+    matchMessage.style.color="green";
+  } else {
+    matchMessage.textContent="✖ Passwords Do Not Match";
+    matchMessage.style.color="red";
+  }
+});
+
+// Validation
+myForm.addEventListener("submit", function(e){
+  e.preventDefault();
+  let valid = true;
+  document.querySelectorAll(".error").forEach(el=>el.textContent="");
+  successMessage.textContent="";
+
+  if(!profilePic.files.length){ picError.textContent="Profile picture required"; valid=false; }
+  if(fullName.value===""){ nameError.textContent="Required"; valid=false; }
+  if(!email.value.includes("@")){ emailError.textContent="Valid email required"; valid=false; }
+  if(!/^[0-9]{10}$/.test(contact.value)){ contactError.textContent="Invalid number"; valid=false; }
+  if(dob.value===""){ dobError.textContent="Required"; valid=false; }
+  if(!document.querySelector('input[name="gender"]:checked')){ genderError.textContent="Required"; valid=false; }
+  if(country.value===""){ countryError.textContent="Required"; valid=false; }
+  if(skill.value===""){ skillError.textContent="Required"; valid=false; }
+  if(experience.value===""){ experienceError.textContent="Required"; valid=false; }
+  if(!resume.files.length){ resumeError.textContent="Resume required"; valid=false; }
+  if(password.value.length<6){ passwordError.textContent="Min 6 characters"; valid=false; }
+  if(password.value!==confirmPassword.value){ confirmError.textContent="Passwords do not match"; valid=false; }
+  if(!agree.checked){ agreeError.textContent="Required"; valid=false; }
+
+  if(valid){
+    successMessage.textContent="Registration Successful!";
+    myForm.reset();
+    preview.style.display="none";
+    strengthBar.style.width="0%";
+    matchMessage.textContent="";
+  }
+});
+
+</script>
+
+</body>
+</html>
