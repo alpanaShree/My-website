@@ -1,0 +1,18 @@
+{
+    "username": "John Doe",
+    "email": "juugi202413472@jainuniversity.ac.in",
+    "contact_number": "+919546667887",
+    "address": "Jain University",
+    "usn": "24BTRCN101",
+    "gender": "Male",
+    "languages": [
+        "HTML",
+        "Python",
+        "Rust"
+    ],
+    "dob": "2007-01-21",
+    "description": "Hi, I am John.",
+    "photo_path": "uploads/photo_1775725586_69d76c124f599.jpg",
+    "resume_path": "uploads/resume_1775725586_69d76c125155d.pdf",
+    "timestamp": 1775725586
+}

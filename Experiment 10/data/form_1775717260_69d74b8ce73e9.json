@@ -1,0 +1,15 @@
+{
+    "username": "Tnaya Shree",
+    "email": "juugi202413472@jainuniversity.ac.in",
+    "usn": "24BTRCN101",
+    "gender": "Female",
+    "languages": [
+        "JavaScript",
+        "Python"
+    ],
+    "dob": "2026-04-15",
+    "description": "hi",
+    "photo_path": "uploads/photo_1775717260_69d74b8ce66d3.jpg",
+    "resume_path": "uploads/resume_1775717260_69d74b8ce6c1d.pdf",
+    "timestamp": 1775717260
+}
